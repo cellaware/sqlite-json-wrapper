@@ -1,0 +1,22 @@
+{
+  "name": "@cellaware/sqlite-json-wrapper",
+  "version": "1.0.0",
+  "description": "SQLite JSON Wrapper",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cellaware/sqlite-json-wrapper.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cellaware/sqlite-json-wrapper/issues"
+  },
+  "homepage": "https://github.com/cellaware/sqlite-json-wrapper#readme",
+  "dependencies": {
+    "sqlite3": "^4.1.1"
+  }
+}
