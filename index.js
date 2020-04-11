@@ -31,7 +31,7 @@ module.exports = {
                 if (err) {
                     reject({sts: this.ResultStatus.ERR, data: err});
                 } else {
-                    resolve({sts: this.ResultStatus.OK, data: res});
+                    resolve({sts: this.ResultStatus.OK, data: {}});
                 }
             });
         });
