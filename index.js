@@ -22,7 +22,7 @@ module.exports = {
     },
 
     // Execution of raw queries:
-    executeQuery: function (sql, dbPath) {
+    executeQuery(sql, dbPath) {
 
         var db = initDb(dbPath);
 
@@ -37,7 +37,7 @@ module.exports = {
             });
         });
     },
-    execute: function (sql, dbPath) {
+    execute(sql, dbPath) {
 
         var db = initDb(dbPath);
 
@@ -52,7 +52,7 @@ module.exports = {
             });
         });
     },
-    executeBatch: function (statements, dbPath) {
+    executeBatch(statements, dbPath) {
 
         var db = initDb(dbPath);
 
@@ -78,24 +78,24 @@ module.exports = {
     },
 
     // Building of queries and subsequent execution:
-    executeInsert: function (tableName, body, dbPath) {
+    executeInsert(tableName, body, dbPath) {
 
         var insertSql = this.buildInsert(tableName, body);
 
         return this.execute(insertSql, dbPath);
     },
-    executeDelete: function (tableName, where, dbPath) {
+    executeDelete(tableName, where, dbPath) {
         var deleteSql = this.buildDelete(tableName, where);
 
         return this.execute(deleteSql, dbPath);
     },
-    executeUpdate: function (tableName, set, where, dbPath) {
+    executeUpdate(tableName, set, where, dbPath) {
 
         var updateSql = this.buildUpdate(tableName, set, where);
 
         return this.execute(updateSql, dbPath);
     },
-    executeSelect: function (tableName, where, dbPath) {
+    executeSelect(tableName, where, dbPath) {
 
         if (where !== undefined) {
 
@@ -108,7 +108,7 @@ module.exports = {
     },
 
     // Building of queries:
-    buildInsert: function (tableName, body) {
+    buildInsert(tableName, body) {
         var insertSql = `insert into ${tableName} (`;
 
         var values = [];
@@ -133,7 +133,7 @@ module.exports = {
 
         return insertSql;
     },
-    buildDelete: function (tableName, where) {
+    buildDelete(tableName, where) {
         var deleteSql = `delete from ${tableName} where `;
 
         for (var key in where) {
@@ -148,7 +148,7 @@ module.exports = {
 
         return deleteSql;
     },
-    buildUpdate: function (tableName, set, where) {
+    buildUpdate(tableName, set, where) {
         var updateSql = `update ${tableName} set `;
 
         for (var key in set) {
@@ -173,7 +173,7 @@ module.exports = {
 
         return updateSql;
     },
-    buildSelect: function (tableName, where) {
+    buildSelect(tableName, where) {
         var selectSql = `select * from ${tableName} where `;
 
         for (var key in where) {
@@ -186,7 +186,7 @@ module.exports = {
     },
 
     // Other utility functions:
-    recordExists: async function (tableName, where, dbPath) {
+    async recordExists(tableName, where, dbPath) {
         try {
             var res = await this.executeSelect(tableName, where, dbPath);
             return res.length > 0;
