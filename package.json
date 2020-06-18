@@ -1,6 +1,6 @@
 {
   "name": "@cellaware/sqlite-json-wrapper",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "SQLite JSON Wrapper",
   "main": "index.js",
   "scripts": {

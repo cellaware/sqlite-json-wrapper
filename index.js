@@ -1,28 +1,12 @@
 const sqlite3 = require('sqlite3');
 
 
-// Private var to store cached db path.
-var cachedDbPath = "";
-
-
 module.exports = {
 
-
-    // Optional db path caching:
-    cacheDbPath(dbPath) {
-        cachedDbPath = dbPath;
-    },
-
     // Execution of raw queries:
-    executeQuery(sql, dbPath) {
+    executeQuery(dbPath, sql) {
 
-        console.log(cachedDbPath);
-        var db = undefined;
-        if (!dbPath) {
-            var db = new sqlite3.Database(cachedDbPath);
-        } else {
-            var db = new sqlite3.Database(dbPath);
-        }
+        const db = new sqlite3.Database(dbPath);
 
         return new Promise((resolve, reject) => {
             console.log(`Executing SQL: ${sql}`);
@@ -35,15 +19,9 @@ module.exports = {
             });
         });
     },
-    execute(sql, dbPath) {
+    execute(dbPath, sql) {
 
-        console.log(cachedDbPath);
-        var db = undefined;
-        if (!dbPath) {
-            var db = new sqlite3.Database(cachedDbPath);
-        } else {
-            var db = new sqlite3.Database(dbPath);
-        }
+        const db = new sqlite3.Database(dbPath);
 
         return new Promise((resolve, reject) => {
             console.log(`Executing SQL: ${sql}`);
@@ -56,15 +34,9 @@ module.exports = {
             });
         });
     },
-    executeBatch(statements, dbPath) {
+    executeBatch(dbPath, statements) {
 
-        console.log(cachedDbPath);
-        var db = undefined;
-        if (!dbPath) {
-            var db = new sqlite3.Database(cachedDbPath);
-        } else {
-            var db = new sqlite3.Database(dbPath);
-        }
+        const db = new sqlite3.Database(dbPath);
 
         return new Promise((resolve, reject) => {
             db.serialize(function () {
@@ -88,32 +60,32 @@ module.exports = {
     },
 
     // Building of queries and subsequent execution:
-    executeInsert(tableName, body, dbPath) {
+    executeInsert(dbPath, tableName, body) {
 
         var insertSql = this.buildInsert(tableName, body);
 
-        return this.execute(insertSql, dbPath);
+        return this.execute(dbPath, insertSql);
     },
-    executeDelete(tableName, where, dbPath) {
+    executeDelete(dbPath, tableName, where) {
         var deleteSql = this.buildDelete(tableName, where);
 
-        return this.execute(deleteSql, dbPath);
+        return this.execute(dbPath, deleteSql);
     },
-    executeUpdate(tableName, set, where, dbPath) {
+    executeUpdate(dbPath, tableName, set, where) {
 
         var updateSql = this.buildUpdate(tableName, set, where);
 
-        return this.execute(updateSql, dbPath);
+        return this.execute(dbPath, updateSql);
     },
-    executeSelect(tableName, where, dbPath) {
+    executeSelect(dbPath, tableName, where) {
 
         if (where !== undefined) {
 
             var selectSql = this.buildSelect(tableName, where);
 
-            return this.executeQuery(selectSql, dbPath);
+            return this.executeQuery(dbPath, selectSql);
         } else {
-            return this.executeQuery(`select * from ${tableName}`, dbPath);
+            return this.executeQuery(dbPath, `select * from ${tableName}`);
         }
     },
 
@@ -196,9 +168,9 @@ module.exports = {
     },
 
     // Other utility functions:
-    async recordExists(tableName, where, dbPath) {
+    async recordExists(dbPath, tableName, where) {
         try {
-            var res = await this.executeSelect(tableName, where, dbPath);
+            var res = await this.executeSelect(dbPath, tableName, where);
             return res.length > 0;
         } catch (e) {
             return false;
