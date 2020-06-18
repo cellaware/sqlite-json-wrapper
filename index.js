@@ -1,10 +1,17 @@
 const sqlite3 = require('sqlite3');
 
+var cachedDbPath = "";
 
 module.exports = {
 
+    cacheDbPath(dbPath) {
+        cachedDbPath = dbPath;
+    },
+
     // Execution of raw queries:
     executeQuery(dbPath, sql) {
+
+        console.log(cachedDbPath);
 
         const db = new sqlite3.Database(dbPath);
 
@@ -145,9 +152,9 @@ module.exports = {
 
         for (var key in where) {
             if (where[key] === null) {
-                updateSql += `${key} = null and `
+                updateSql += `${key} = null and `;
             } else {
-                updateSql += `${key} = '${where[key]}' and `
+                updateSql += `${key} = '${where[key]}' and `;
             }
         }
 
@@ -159,7 +166,12 @@ module.exports = {
         var selectSql = `select * from ${tableName} where `;
 
         for (var key in where) {
-            selectSql += `${key} = '${where[key]}' and `
+            if (where[key] === null) {
+                selectSql += `${key} = null and `;
+            } else {
+                selectSql += `${key} = '${where[key]}' and `
+            }
+
         }
 
         selectSql = selectSql.substr(0, selectSql.lastIndexOf(' and '));
