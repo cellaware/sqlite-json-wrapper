@@ -4,15 +4,6 @@ const sqlite3 = require('sqlite3');
 // Private var to store cached db path.
 var cachedDbPath = "";
 
-// Private function to initialize sqlite db instance based on dbPath var passed in (usage of cached vs non-cached).
-function initDb(dbPath) {
-    console.log(cachedDbPath);
-    if (!dbPath) {
-        return new sqlite3.Database(cachedDbPath);
-    } else {
-        return new sqlite3.Database(dbPath);
-    }
-}
 
 module.exports = {
 
@@ -25,7 +16,13 @@ module.exports = {
     // Execution of raw queries:
     executeQuery(sql, dbPath) {
 
-        var db = initDb(dbPath);
+        console.log(cachedDbPath);
+        var db = undefined;
+        if (!dbPath) {
+            var db = new sqlite3.Database(cachedDbPath);
+        } else {
+            var db = new sqlite3.Database(dbPath);
+        }
 
         return new Promise((resolve, reject) => {
             console.log(`Executing SQL: ${sql}`);
@@ -40,7 +37,13 @@ module.exports = {
     },
     execute(sql, dbPath) {
 
-        var db = initDb(dbPath);
+        console.log(cachedDbPath);
+        var db = undefined;
+        if (!dbPath) {
+            var db = new sqlite3.Database(cachedDbPath);
+        } else {
+            var db = new sqlite3.Database(dbPath);
+        }
 
         return new Promise((resolve, reject) => {
             console.log(`Executing SQL: ${sql}`);
@@ -55,7 +58,13 @@ module.exports = {
     },
     executeBatch(statements, dbPath) {
 
-        var db = initDb(dbPath);
+        console.log(cachedDbPath);
+        var db = undefined;
+        if (!dbPath) {
+            var db = new sqlite3.Database(cachedDbPath);
+        } else {
+            var db = new sqlite3.Database(dbPath);
+        }
 
         return new Promise((resolve, reject) => {
             db.serialize(function () {
