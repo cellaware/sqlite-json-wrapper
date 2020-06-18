@@ -6,6 +6,7 @@ var cachedDbPath = "";
 
 // Private function to initialize sqlite db instance based on dbPath var passed in (usage of cached vs non-cached).
 function initDb(dbPath) {
+    console.log(cachedDbPath);
     if (!dbPath) {
         return new sqlite3.Database(cachedDbPath);
     } else {
