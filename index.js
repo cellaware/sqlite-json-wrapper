@@ -2,7 +2,7 @@ const sqlite3 = require('sqlite3');
 
 
 // Private var to store cached db path.
-var cachedDbPath = undefined;
+var cachedDbPath = "";
 
 // Private function to initialize sqlite db instance based on dbPath var passed in (usage of cached vs non-cached).
 function initDb(dbPath) {
