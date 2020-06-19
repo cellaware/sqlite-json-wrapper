@@ -36,9 +36,9 @@ module.exports = {
             });
         });
     },
-    execute(dbPath, sql) {
+    execute(sql, dbPath) {
 
-        const db = new sqlite3.Database(dbPath);
+        const db = initDb(dbPath);
 
         return new Promise((resolve, reject) => {
             console.log(`Executing SQL: ${sql}`);
@@ -51,9 +51,9 @@ module.exports = {
             });
         });
     },
-    executeBatch(dbPath, statements) {
+    executeBatch(statements, dbPath) {
 
-        const db = new sqlite3.Database(dbPath);
+        const db = initDb(dbPath);
 
         return new Promise((resolve, reject) => {
             db.serialize(function () {
@@ -77,24 +77,24 @@ module.exports = {
     },
 
     // Building of queries and subsequent execution:
-    executeInsert(dbPath, tableName, body) {
+    executeInsert(tableName, body, dbPath) {
 
         var insertSql = this.buildInsert(tableName, body);
 
-        return this.execute(dbPath, insertSql);
+        return this.execute(insertSql, dbPath);
     },
-    executeDelete(dbPath, tableName, where) {
+    executeDelete(tableName, where, dbPath) {
         var deleteSql = this.buildDelete(tableName, where);
 
-        return this.execute(dbPath, deleteSql);
+        return this.execute(deleteSql, dbPath);
     },
-    executeUpdate(dbPath, tableName, set, where) {
+    executeUpdate(tableName, set, where, dbPath) {
 
         var updateSql = this.buildUpdate(tableName, set, where);
 
-        return this.execute(dbPath, updateSql);
+        return this.execute(updateSql, dbPath);
     },
-    executeSelect(dbPath, tableName, where) {
+    executeSelect(tableName, where, dbPath) {
 
         if (where !== undefined) {
 
