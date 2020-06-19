@@ -1,19 +1,29 @@
 const sqlite3 = require('sqlite3');
 
+
+// Optional cached db path variable.
 var cachedDbPath = "";
+
+// Procedure to initialize new sqlite db instance based on 'cachedDbPath' state.
+function initDb(dbPath) {
+    if (!dbPath) {
+        return new sqlite3.Database(cachedDbPath);
+    } else {
+        return new sqlite3.Database(dbPath);
+    }
+}
 
 module.exports = {
 
+    // Optional db path caching:
     cacheDbPath(dbPath) {
         cachedDbPath = dbPath;
     },
 
     // Execution of raw queries:
-    executeQuery(dbPath, sql) {
+    executeQuery(sql, dbPath) {
 
-        console.log(cachedDbPath);
-
-        const db = new sqlite3.Database(dbPath);
+        const db = initDb(dbPath);
 
         return new Promise((resolve, reject) => {
             console.log(`Executing SQL: ${sql}`);
@@ -90,9 +100,9 @@ module.exports = {
 
             var selectSql = this.buildSelect(tableName, where);
 
-            return this.executeQuery(dbPath, selectSql);
+            return this.executeQuery(selectSql, dbPath);
         } else {
-            return this.executeQuery(dbPath, `select * from ${tableName}`);
+            return this.executeQuery(`select * from ${tableName}`, dbPath);
         }
     },
 
@@ -182,7 +192,7 @@ module.exports = {
     // Other utility functions:
     async recordExists(dbPath, tableName, where) {
         try {
-            var res = await this.executeSelect(dbPath, tableName, where);
+            var res = await this.executeSelect(tableName, where, dbPath);
             return res.length > 0;
         } catch (e) {
             return false;
