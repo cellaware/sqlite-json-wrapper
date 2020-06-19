@@ -190,7 +190,7 @@ module.exports = {
     },
 
     // Other utility functions:
-    async recordExists(dbPath, tableName, where) {
+    async recordExists(tableName, where, dbPath) {
         try {
             var res = await this.executeSelect(tableName, where, dbPath);
             return res.length > 0;
