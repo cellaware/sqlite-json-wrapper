@@ -130,7 +130,7 @@ module.exports = {
     buildDelete(tableName, where) {
         var deleteSql = `delete from ${tableName} `;
 
-        deleteSql += this.buildWhere(where);
+        deleteSql += this.buildWhereClause(where);
 
         return deleteSql;
     },
@@ -147,20 +147,20 @@ module.exports = {
 
         updateSql = updateSql.substr(0, updateSql.lastIndexOf(', '));
 
-        updateSql += this.buildWhere(where);
+        updateSql += this.buildWhereClause(where);
 
         return updateSql;
     },
     buildSelect(tableName, where) {
         var selectSql = `select * from ${tableName}`;
 
-        selectSql += this.buildWhere(where);
+        selectSql += this.buildWhereClause(where);
 
         return selectSql;
     },
 
     // Building of clauses:
-    buildWhere(where) {
+    buildWhereClause(where) {
 
         if (!where) {
             return "";
