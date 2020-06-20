@@ -96,14 +96,9 @@ module.exports = {
     },
     executeSelect(tableName, where, dbPath) {
 
-        if (where !== undefined) {
+        var selectSql = this.buildSelect(tableName, where);
 
-            var selectSql = this.buildSelect(tableName, where);
-
-            return this.executeQuery(selectSql, dbPath);
-        } else {
-            return this.executeQuery(`select * from ${tableName}`, dbPath);
-        }
+        return this.executeQuery(selectSql, dbPath);
     },
 
     // Building of queries:
@@ -133,17 +128,9 @@ module.exports = {
         return insertSql;
     },
     buildDelete(tableName, where) {
-        var deleteSql = `delete from ${tableName} where `;
+        var deleteSql = `delete from ${tableName} `;
 
-        for (var key in where) {
-            if (where[key] === null) {
-                deleteSql += `${key} = null and `;
-            } else {
-                deleteSql += `${key} = '${where[key]}' and `;
-            }
-        }
-
-        deleteSql = deleteSql.substr(0, deleteSql.lastIndexOf(' and '));
+        deleteSql += this.buildWhere(where);
 
         return deleteSql;
     },
@@ -158,35 +145,41 @@ module.exports = {
             }
         }
 
-        updateSql = updateSql.substr(0, updateSql.lastIndexOf(', ')) + ' where ';
+        updateSql = updateSql.substr(0, updateSql.lastIndexOf(', '));
 
-        for (var key in where) {
-            if (where[key] === null) {
-                updateSql += `${key} = null and `;
-            } else {
-                updateSql += `${key} = '${where[key]}' and `;
-            }
-        }
-
-        updateSql = updateSql.substr(0, updateSql.lastIndexOf(' and '));
+        updateSql += this.buildWhere(where);
 
         return updateSql;
     },
     buildSelect(tableName, where) {
-        var selectSql = `select * from ${tableName} where `;
+        var selectSql = `select * from ${tableName}`;
 
-        for (var key in where) {
-            if (where[key] === null) {
-                selectSql += `${key} = null and `;
-            } else {
-                selectSql += `${key} = '${where[key]}' and `
-            }
-
-        }
-
-        selectSql = selectSql.substr(0, selectSql.lastIndexOf(' and '));
+        selectSql += this.buildWhere(where);
 
         return selectSql;
+    },
+
+    // Building of clauses:
+    buildWhere(where) {
+
+        if (!where) {
+            return "";
+        } else {
+            var whereClause = ` where `;
+            for (var key in where) {
+                if (where[key] === null) {
+                    whereClause += `${key} = null and `;
+                } else {
+                    whereClause += `${key} = '${where[key]}' and `
+                }
+            }
+
+            whereClause = whereClause.substr(0, whereClause.lastIndexOf(' and '));
+
+            return whereClause;
+        }
+
+
     },
 
     // Other utility functions:
