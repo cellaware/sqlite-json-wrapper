@@ -3,4 +3,6 @@ SQLite JSON Wrapper
 
 
 - configure options:
-  - printSql: boolean
+  {
+      printSql: boolean
+  }

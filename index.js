@@ -2,12 +2,12 @@ const sqlite3 = require('sqlite3');
 
 
 // Optional cached db path variable.
-var cachedDbPath = "";
+var _cachedDbPath = "";
 
 // Procedure to initialize new sqlite db instance based on 'cachedDbPath' state.
-function initDb(dbPath) {
+function _initDb(dbPath) {
     if (!dbPath) {
-        return new sqlite3.Database(cachedDbPath);
+        return new sqlite3.Database(_cachedDbPath);
     } else {
         return new sqlite3.Database(dbPath);
     }
@@ -20,7 +20,7 @@ module.exports = {
 
     // Optional db path caching:
     cacheDbPath(dbPath) {
-        cachedDbPath = dbPath;
+        _cachedDbPath = dbPath;
     },
 
     // Optional configuration:
@@ -31,7 +31,7 @@ module.exports = {
     // Execution of raw queries:
     executeQuery(sql, dbPath) {
 
-        const db = initDb(dbPath);
+        const db = _initDb(dbPath);
 
         return new Promise((resolve, reject) => {
             if (_options.printSql) {
@@ -48,7 +48,7 @@ module.exports = {
     },
     execute(sql, dbPath) {
 
-        const db = initDb(dbPath);
+        const db = _initDb(dbPath);
 
         return new Promise((resolve, reject) => {
             if (_options.printSql) {
@@ -65,7 +65,7 @@ module.exports = {
     },
     executeBatch(statements, dbPath) {
 
-        const db = initDb(dbPath);
+        const db = _initDb(dbPath);
 
         return new Promise((resolve, reject) => {
             db.serialize(function () {
