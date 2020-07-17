@@ -13,11 +13,19 @@ function initDb(dbPath) {
     }
 }
 
+// Various configuration options.
+var _options = {};
+
 module.exports = {
 
     // Optional db path caching:
     cacheDbPath(dbPath) {
         cachedDbPath = dbPath;
+    },
+
+    // Optional configuration:
+    configure(options) {
+        _options = options;
     },
 
     // Execution of raw queries:
@@ -26,7 +34,9 @@ module.exports = {
         const db = initDb(dbPath);
 
         return new Promise((resolve, reject) => {
-            console.log(`Executing SQL: ${sql}`);
+            if (_options.printSql) {
+                console.log(`Executing SQL: ${sql}`);
+            }
             db.all(sql, (err, res) => {
                 if (err) {
                     reject(err);
@@ -41,7 +51,9 @@ module.exports = {
         const db = initDb(dbPath);
 
         return new Promise((resolve, reject) => {
-            console.log(`Executing SQL: ${sql}`);
+            if (_options.printSql) {
+                console.log(`Executing SQL: ${sql}`);
+            }
             db.run(sql, (err) => {
                 if (err) {
                     reject(err);
@@ -57,17 +69,25 @@ module.exports = {
 
         return new Promise((resolve, reject) => {
             db.serialize(function () {
-                console.log(`Executing SQL: BEGIN`);
+                if (_options.printSql) {
+                    console.log(`Executing SQL: BEGIN`);
+                }
                 db.exec("BEGIN");
                 var sql = statements.join('; ');
-                console.log(`Executing SQL: ${sql}`);
+                if (_options.printSql) {
+                    console.log(`Executing SQL: ${sql}`);
+                }
                 db.exec(sql, (err) => {
                     if (err) {
-                        console.log(`Executing SQL: ROLLBACK`);
+                        if (_options.printSql) {
+                            console.log(`Executing SQL: ROLLBACK`);
+                        }
                         db.exec("ROLLBACK");
                         reject(err);
                     } else {
-                        console.log(`Executing SQL: COMMIT`);
+                        if (_options.printSql === true) {
+                            console.log(`Executing SQL: COMMIT`);
+                        }
                         db.exec("COMMIT");
                         resolve({});
                     }
